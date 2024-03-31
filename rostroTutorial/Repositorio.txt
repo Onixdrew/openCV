@@ -1,3 +1,1 @@
-Link: 
-
-https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbnNIODJHaHNkLTI3SElkaDVNMzVHZmNGT2hxd3xBQ3Jtc0ttQnhmWlltT01KYkMyTVRWdUROSUpwajFmSmwwdUJUXzdsZ3pwZVpUOFRPc0k4RFVwZkVwVXJNaTRhYzNqUnd0b0VYa19nOVZYd1ZOYmNJOS1sY2h4OHAyelp6OFVWaURpcE85cER4TU52VkhVTXo3OA&q=https%3A%2F%2Fgithub.com%2Fabi94e%2Fthe-eyes-of-ia.git&v=TAyyKDVJWRs
+Link: https://github.com/abi94e/the-eyes-of-ia.git 
