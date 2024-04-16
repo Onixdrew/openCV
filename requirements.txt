@@ -1,6 +1,6 @@
 dnspython==2.6.1
 imutils==0.5.4
 numpy==1.26.4
-opencv-python==4.9.0.80
+opencv-contrib-python==4.9.0.80
 pillow==10.3.0
 pymongo==4.6.3

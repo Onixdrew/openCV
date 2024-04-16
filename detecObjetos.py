@@ -1,4 +1,4 @@
-import cv2
+# import cv2
 
 # /////////// abrir camara/////////////
 
@@ -40,6 +40,8 @@ import cv2
 
 
 
+
+
 # /////////////// Grabar video ///////////
 
 # # Se inicializa la captura de video desde la cámara del dispositivo
@@ -76,6 +78,9 @@ import cv2
 
 # # Se cierran todas las ventanas abiertas
 # cv2.destroyAllWindows()
+
+
+
 
 
 # ///////////////// tomar fotos///////////////
@@ -119,6 +124,9 @@ import cv2
 
 # # Se cierran todas las ventanas abiertas
 # cv2.destroyAllWindows()
+
+
+
 
 
 # ////////////// Deteccion de colores ///////////
@@ -314,213 +322,3 @@ import cv2
 # # detiene el proceso de la camara    
 # camara.release()
 # cv2.destroyAllWindows()
- 
- 
-#  ///////////////  Reconocimiento Facial //////////////
-
-
-# # import cv2
-
-# # Cargar el clasificador en cascada para la detección de rostros
-#                                     #  módulo en OpenCV que proporciona
-#                                     # rutas  predefinidas a los 
-#                                     # clasificadores en cascada Haar  +  archivo XML que contiene la información del clasificador en cascada para la detección de rostros frontales
-# face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
-# # Cargar el modelo(clase) de reconocimiento facial LBPH de openCV
-# recognizer = cv2.face.LBPHFaceRecognizer_create()
-
-# # Leer el modelo previamente entrenado para el reconocimiento facial
-# recognizer.read('modelo_reconocimiento_facil.xml')
-# # read(): Este método(funcion) del objeto recognizer se utiliza para cargar un modelo de reconocimiento facial desde un archivo XML
-
-
-# # Capturar video desde la cámara
-# cap = cv2.VideoCapture(0)
-
-# while True:
-#     # Leer un fotograma del video
-#     ret, frame = cap.read()
-    
-#     # Convertir la imagen a escala de grises
-#     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-#     # Detectar rostros en la imagen
-#     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-    
-#     # Para cada rostro detectado, realizar el reconocimiento facial
-#     for (x, y, w, h) in faces:
-#         # Dibujar un rectángulo alrededor del rostro detectado
-#         cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        
-#         # Realizar el reconocimiento facial en la región del rostro
-#                                         #  Esto extrae la región de la imagen que contiene el rostro detectado.
-#         id_, conf = recognizer.predict(gray[y:y+h, x:x+w])
-#         # Esta función toma una imagen(o una región de una imagen) como entrada y devuelve dos valores: id_ y conf.
-        
-#         # id_: Este es el ID asociado a la persona reconocida. En el proceso de entrenamiento, cada persona tiene un ID único asociado con su rostro.
-        
-#         # conf: Esta es la confianza o certeza de la predicción. Indica cuán seguro está el modelo en su predicción. Generalmente, los valores más bajos indican mayor confianza.
-#         # Un valor bajo significa que el modelo encontró una buena coincidencia entre el rostro detectado y las caras en el conjunto de entrenamiento.
-        
-        
-#         # Si la confianza es alta, mostrar el nombre predicho
-#         if conf < 70:
-#             # Aquí deberías tener un diccionario o base de datos que asocie los IDs con los nombres de las personas
-#             nombre = "Persona " + str(id_)
-#         else:
-#             nombre = "Desconocido"
-        
-#         # Mostrar el nombre predicho sobre el rostro
-#         cv2.putText(frame, nombre, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2, cv2.LINE_AA)
-    
-#     # Mostrar el fotograma resultante
-#     cv2.imshow('Frame', frame)
-    
-#     # Salir del bucle si se presiona 'q'
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
-
-# # Liberar la captura y cerrar todas las ventanas
-# cap.release()
-# cv2.destroyAllWindows()
-
-
-
-
-
-#  ///////////////  Reconocimiento Facial (Real)!!!!!!!! //////////////
-
-                # toma de fotos y almacenamiento en base de datos
-
-import cv2
-from pymongo import MongoClient
-import imutils
-#se usa para el procesamiento de imágenes de manera más fáci, como Redimensionar imágenes.Rotar imágenes.Transladar imágenes.Recortar regiones de interés (ROI) en imágenes.
-from bson import Binary
-# BSON es un formato binario utilizado por MongoDB para almacenar 
-# y transferir datos de manera eficiente. La biblioteca bson proporciona
-# herramientas para codificar y decodificar datos en formato BSON.
-
-# Conectarse a la base de datos MongoDB Atlas
-client = MongoClient("mongodb+srv://Andrew:6yRZzkGdCsFPGPs0@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-
-# Seleccionar la base de datos y la colección
-db = client["vision_artificial"]
-usuarios = db["usuarios"]
-user=input("Ingrese su nombre: ")
-
-clasificador= cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt.xml")
-
-usuarios.insert_one({"Nombre":user,"fotos":[]})
-# Configurar la cámara
-camera = cv2.VideoCapture(0)
-contador=0
-listaFotos=[]
-while True:
-    # Capturar un fotograma
-    imgDisponible, frame = camera.read()
-    
-    if imgDisponible==False:
-        break
-    
-    frame=imutils.resize(frame, width=320)
-    gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    auxFrame=frame.copy()
-    # deteccion rostro
-    faces= clasificador.detectMultiScale(gray,1.3,5)
-    
-    for (x,y,w,h) in faces:
-        cv2.rectangle(frame,(x,y),(x+w, y+h), (0,255,0), 2)
-        rostro= auxFrame[y:y+h, x:x+w]
-        rostro= cv2.resize(rostro, (720, 720), interpolation=cv2.INTER_CUBIC)
-        
-        # Guardar la imagen en MongoDB
-        ret, buffer = cv2.imencode('.jpg', rostro)
-        #  La función cv2.imencode() toma una imagen y la codifica en un formato específico en este caso, .jpg . Esta función devuelve dos valores: ret y buffer. ret es una bandera 
-        # que indica si la codificación fue exitosa (True) o no (False). buffer es un array de bytes que contiene los datos de la imagen codificada en formato JPEG.
-        
-        image_data = buffer.tobytes()
-        #  Convertimos el array de bytes buffer en un objeto bytes utilizando el método tobytes(). Esto nos da los datos de la imagen en formato de bytes.
-
-        image_binary = Binary(image_data)
-        # Creamos un objeto Binary de MongoDB utilizando los datos de la imagen en formato de bytes. MongoDB puede almacenar datos binarios como objetos Binary. Este paso es necesario para poder almacenar la imagen en MongoDB.
-        # Los bytes son la unidad básica de almacenamiento y transferencia de datos en sistemas informáticos.
-        
-        usuarios.update_one({ "Nombre":user }, { "$push": { "fotos": image_binary } })
-        contador+=1 
-    
-    # Mostrar el fotograma 
-    cv2.imshow("Captura de rostros", frame)
-    
-
-    # Esperar la pulsación de la tecla 'q' para salir
-    if cv2.waitKey(1) == ord('q') or contador >=20:
-        break
-
-# Liberar la cámara y cerrar la ventana
-camera.release()
-cv2.destroyAllWindows()
-print(f'{user} se registró correctamente')
-
-
-
-
-
-
-# //////////////////////////////////////////////////////////////
-           # entrenamiento generar archivo xml:
-
-
-# import cv2
-# import numpy as np
-# from pymongo import MongoClient
-
-# # Conectarse a la base de datos MongoDB Atlas
-# client = MongoClient("mongodb+srv://Andrew:6yRZzkGdCsFPGPs0@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-
-# # Seleccionar la base de datos y la colección
-# db = client["vision_artificial"]
-# usuarios = db["usuarios"]
-
-# # Inicializar el reconocedor de rostros LBPH
-# face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-
-# # Inicializar listas para almacenar caras y etiquetas
-# faces = []
-# labels = []
-
-# # Recorrer los documentos para obtener las imágenes de las personas
-# for user in usuarios.find():
-#     # Obtener la etiqueta de la persona
-#     label = user["_id"]
-    
-#     # Obtener las imágenes de la persona
-#     images = user["fotos"]
-    
-#     # Recorrer las imágenes de la persona
-#     for image_binary in images:
-#         # Convertir los datos binarios en un array de bytes
-#         image_data = np.frombuffer(image_binary, dtype=np.uint8)
-#         #  convierte los datos binarios de la imagen en un arreglo NumPy de tipo uint8 (entero sin signo de 8 bits).
-#         # np.uint8, que representa números enteros sin signo de 8 bits (es decir, números enteros en el rango de 0 a 255).
-        
-#         # Decodificar la imagen utilizando OpenCV
-#         image = cv2.imdecode(image_data, cv2.IMREAD_GRAYSCALE)
-#         # Esta función de OpenCV decodifica una imagen codificada y la carga en la memoria como una matriz NumPy. En este caso, image_data es el arreglo NumPy que contiene los datos binarios de la imagen que deseas decodificar.
-#         # cv2.IMREAD_GRAYSCALE: Este es un indicador que se utiliza para especificar que se debe cargar la imagen en escala de grises.
-        
-#         # Agregar la imagen y la etiqueta a las listas
-#         faces.append(image)
-#         labels.append(label)
-
-# # Entrenar el modelo LBPH Face Recognizer
-# face_recognizer.train(faces, np.array(labels))
-# # Cada imagen en faces está asociada con su correspondiente etiqueta en labels.
-# # Es decir, la primera imagen en faces se asocia con la primera etiqueta en labels,
-# # la segunda imagen en faces se asocia con la segunda etiqueta en labels, y así sucesivamente.
-
-# # Guardar el modelo entrenado en un único archivo XML
-# face_recognizer.save("modelo_vision_artificial.xml")
-
-# print("Modelo entrenado y guardado exitosamente.")
