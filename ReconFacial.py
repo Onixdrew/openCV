@@ -111,7 +111,7 @@ import cv2
 from pymongo import MongoClient
 
 # Cargar el clasificador en cascada para la detección de rostros
-faceClassifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+faceClassifier = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
 
 # Cargar el modelo de reconocimiento facial LBPH de OpenCV
 recognizer = cv2.face.LBPHFaceRecognizer_create()

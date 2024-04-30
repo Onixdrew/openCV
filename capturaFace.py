@@ -108,7 +108,7 @@ client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mon
 db = client["vision_artificial"]
 usuarios = db["usuarios"]
 
-clasificador = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+clasificador = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
 
 def capturar_imagenes(usuario_id, nombre_usuario):
     # Configurar la cámara
