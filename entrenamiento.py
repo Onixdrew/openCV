@@ -134,6 +134,19 @@ def cargar_imagenes_y_etiquetas():
     
     return faces, labels
 
+# # /////// comprobar si se cargo las imagenes
+
+# faces,labels=cargar_imagenes_y_etiquetas()
+# for face in faces:
+#     # Mostrar la imagen en una ventana de OpenCV
+#     cv2.imshow('Imagen', face)
+    
+#     # Esperar hasta que se presione la tecla 'q' para salir
+#     if cv2.waitKey(0) & 0xFF == ord('q'):
+#         break
+# cv2.destroyAllWindows()
+# /////////////////////////////////////////////////////
+
 def entrenar_modelo(faces, labels):
     # Inicializar el modelo entrenador de rostros LBPH
     face_recognizer = cv2.face.LBPHFaceRecognizer_create()

@@ -107,11 +107,103 @@
 
 
 
+# import cv2
+# from pymongo import MongoClient
+
+# # Cargar el clasificador en cascada para la detección de rostros
+# faceClassifier = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
+
+# # Cargar el modelo de reconocimiento facial LBPH de OpenCV
+# recognizer = cv2.face.LBPHFaceRecognizer_create()
+
+# # Leer el modelo previamente entrenado para el reconocimiento facial
+# recognizer.read('modelo_vision_artificial.xml')
+
+# # Conectarse a la base de datos MongoDB Atlas
+# client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+
+# # Seleccionar la base de datos y la colección
+# db = client["vision_artificial"]
+# usuarios = db["usuarios"]
+
+# camara = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+# # Contador de fotogramas procesados
+# frame_count = 0
+
+# while True:
+#     # Leer un fotograma del video
+#     ret, frame = camara.read()
+    
+#     if not ret:
+#         break
+    
+#     # Incrementar el contador de fotogramas
+#     frame_count += 1
+    
+#     # Procesar solo cada segundo fotograma
+#     if frame_count % 2 != 0:
+#         continue
+    
+#     # Voltear horizontalmente la imagen
+#     frameNormal = cv2.flip(frame, 1)
+    
+#     # Convertir la imagen a escala de grises
+#     gray = cv2.cvtColor(frameNormal, cv2.COLOR_BGR2GRAY)
+    
+#     # Detectar rostros en la imagen
+#     faces = faceClassifier.detectMultiScale(gray, 1.3, 5)
+    
+#     # Para cada rostro detectado, realizar el reconocimiento facial
+#     for (x, y, w, h) in faces:
+#         # Extraer la región del rostro
+#         rostro = gray[y:y+h, x:x+w]
+#         # Cambiar el tamaño del rostro
+#         rostro = cv2.resize(rostro, (150, 150))
+        
+#         # Realizar el reconocimiento facial en el rostro
+#         id_, conf = recognizer.predict(rostro)
+        
+#         # Obtener la información del usuario desde la base de datos
+#         consultaCodigo = usuarios.find_one({"codigo": id_})
+        
+#         # Dibujar un rectángulo alrededor del rostro detectado
+#         cv2.rectangle(frameNormal, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        
+#         # Mostrar el nombre predicho sobre el rostro
+#         if conf < 65:
+#             nombre = consultaCodigo["Nombre"]
+#         else:
+#             nombre = "Desconocido"
+#         cv2.putText(frameNormal, nombre, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,0), 2, cv2.LINE_AA)
+    
+#     # Mostrar el fotograma resultante
+#     cv2.imshow('RECONOCIMIENTO FACIAL', frameNormal)
+    
+#     # Salir del bucle si se presiona 'q'
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+
+# # Liberar la captura y cerrar todas las ventanas
+# camara.release()
+# cv2.destroyAllWindows()
+
+
+
+
+
+
+# //////////////////////////////// 2 clasificadores (frontal, perfil derecho)//////////////////////////////////////////////
+
+
 import cv2
 from pymongo import MongoClient
 
-# Cargar el clasificador en cascada para la detección de rostros
-faceClassifier = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
+# Cargar el clasificador en cascada para la detección de rostros frontal
+faceClassifierFrontal = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
+
+# Cargar el clasificador en cascada para la detección de rostros lateral (perfil)
+faceClassifierProfile = cv2.CascadeClassifier('lbpcascade_profileface.xml')
 
 # Cargar el modelo de reconocimiento facial LBPH de OpenCV
 recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -142,7 +234,7 @@ while True:
     frame_count += 1
     
     # Procesar solo cada segundo fotograma
-    if frame_count % 2 != 0:
+    if frame_count % 3 != 0:
         continue
     
     # Voltear horizontalmente la imagen
@@ -151,8 +243,14 @@ while True:
     # Convertir la imagen a escala de grises
     gray = cv2.cvtColor(frameNormal, cv2.COLOR_BGR2GRAY)
     
-    # Detectar rostros en la imagen
-    faces = faceClassifier.detectMultiScale(gray, 1.3, 5)
+    # Detectar rostros frontales en la imagen
+    facesFrontal = faceClassifierFrontal.detectMultiScale(gray, 1.3, 5)
+    
+    # Detectar rostros de perfil en la imagen
+    facesProfile = faceClassifierProfile.detectMultiScale(gray, 1.3, 5)
+    
+    # Combinar las detecciones de rostros frontales y de perfil
+    faces = list(facesFrontal) + list(facesProfile)
     
     # Para cada rostro detectado, realizar el reconocimiento facial
     for (x, y, w, h) in faces:
@@ -171,7 +269,7 @@ while True:
         cv2.rectangle(frameNormal, (x, y), (x+w, y+h), (255, 0, 0), 2)
         
         # Mostrar el nombre predicho sobre el rostro
-        if conf < 65:
+        if conf < 70:
             nombre = consultaCodigo["Nombre"]
         else:
             nombre = "Desconocido"
@@ -181,7 +279,8 @@ while True:
     cv2.imshow('RECONOCIMIENTO FACIAL', frameNormal)
     
     # Salir del bucle si se presiona 'q'
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1)
+    if key == ord('q'):
         break
 
 # Liberar la captura y cerrar todas las ventanas
