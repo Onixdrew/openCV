@@ -253,11 +253,11 @@ while True:
     faces = list(facesFrontal) + list(facesProfile)
     
     # Para cada rostro detectado, realizar el reconocimiento facial
-    for (x, y, w, h) in faces:
+    for (x, y, w, h) in facesFrontal:
         # Extraer la región del rostro
         rostro = gray[y:y+h, x:x+w]
         # Cambiar el tamaño del rostro
-        rostro = cv2.resize(rostro, (150, 150))
+        rostro = cv2.resize(rostro, (300, 300))
         
         # Realizar el reconocimiento facial en el rostro
         id_, conf = recognizer.predict(rostro)

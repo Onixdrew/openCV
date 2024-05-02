@@ -234,7 +234,7 @@ def capturar_imagenes(usuario_id, nombre_usuario):
             # Recortar el rostro
             rostro = frameNormal[y:y+h, x:x+w]
             # Redimensionar el rostro
-            rostro = cv2.resize(rostro, (150, 150))
+            rostro = cv2.resize(rostro, (300, 300))
             # Guardar la imagen en MongoDB
             ret, buffer = cv2.imencode('.jpg', rostro)
             image_data = buffer.tobytes()

@@ -137,6 +137,7 @@ def cargar_imagenes_y_etiquetas():
 # # /////// comprobar si se cargo las imagenes
 
 # faces,labels=cargar_imagenes_y_etiquetas()
+
 # for face in faces:
 #     # Mostrar la imagen en una ventana de OpenCV
 #     cv2.imshow('Imagen', face)
