@@ -2,35 +2,49 @@
 
 
 # import cv2
-# from pymongo import MongoClient
+# # from pymongo import MongoClient
 # import imutils
+# import os
 # #se usa para el procesamiento de imágenes de manera más fáci, como Redimensionar imágenes.Rotar imágenes.Transladar imágenes.Recortar regiones de interés (ROI) en imágenes.
-# from bson import Binary
+# # from bson import Binary
 # # BSON es un formato binario utilizado por MongoDB para almacenar 
 # # y transferir datos de manera eficiente. La biblioteca bson proporciona
 # # herramientas para codificar y decodificar datos en formato BSON.
 
 # # Conectarse a la base de datos MongoDB Atlas
-# client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+# # client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # # Seleccionar la base de datos y la colección
-# db = client["vision_artificial"]
-# usuarios = db["usuarios"]
+# # db = client["vision_artificial"]
+# # usuarios = db["usuarios"]
 
-# clasificador= cv2.CascadeClassifier("lbpcascade_frontalface_improved.xml")
+# clasificador= cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt.xml")
 
-# codigo=int(input("Ingrese su ID: "))
+# # codigo=int(input("Ingrese su ID: "))
 
-# queryUser=usuarios.find_one({"codigo":codigo})
+# # se crean la carpeta donde se va almacenar las fotos
 
-# if not queryUser:
-#     user=input("Ingrese su nombre: ")
-#     usuarios.insert_one({"codigo":codigo,"Nombre":user,"fotos":[]})
+# NombreUser=input('Ingresa tu nombre: ')
+
+# dataPath= r'C:\Users\Andrew\Documents\OpenCV\data'
+# dirPersona= dataPath + '/' + NombreUser
+
+
+
+# if not os.path.exists(dirPersona):
+#     os.makedirs(dirPersona)
+#     print('caperta creada: ', dirPersona)
+    
+#     # user=input("Ingrese su nombre: ")
+#     # usuarios.insert_one({"codigo":codigo,"Nombre":user,"fotos":[]})
 
 #     # Configurar la cámara
-#     camera = cv2.VideoCapture(0)
+#     camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 #     contador=0
-#     listaFotos=[]
+
+
+#     # listaFotos=[]
+    
 #     while True:
 #         # Capturar un fotograma
 #         imgDisponible, frame = camera.read()
@@ -39,11 +53,12 @@
 #             break
         
 #         # Voltear horizontalmente la imagen
-#         # frameNormal = cv2.flip(frame, 1)
+#         frameNormal = cv2.flip(frame, 1)
         
-#         frame=imutils.resize(frame, width=800)
+#         frame=imutils.resize(frameNormal, width=750)
 #         gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 #         auxFrame=frame.copy()
+        
 #         # deteccion rostro
 #         faces= clasificador.detectMultiScale(gray,1.3,5)
         
@@ -52,36 +67,43 @@
 #             rostro= auxFrame[y:y+h, x:x+w]
 #             rostro= cv2.resize(rostro, (720, 720), interpolation=cv2.INTER_CUBIC)
             
+#             # Guardar la imagen en en la carpeta local
+#             cv2.imwrite(dirPersona + '/rostro_{}.jpg'.format(contador), rostro)
+            
+            
 #             # Guardar la imagen en MongoDB
-#             ret, buffer = cv2.imencode('.jpg', rostro)
+#             # ret, buffer = cv2.imencode('.jpg', rostro)
 #             #  La función cv2.imencode() toma una imagen y la codifica en un formato específico en este caso, .jpg . Esta función devuelve dos valores: ret y buffer. ret es una bandera 
 #             # que indica si la codificación fue exitosa (True) o no (False). buffer es un array de bytes que contiene los datos de la imagen codificada en formato JPEG.
             
-#             image_data = buffer.tobytes()
+#             # image_data = buffer.tobytes()
 #             #  Convertimos el array de bytes buffer en un objeto bytes utilizando el método tobytes(). Esto nos da los datos de la imagen en formato de bytes.
 
-#             image_binary = Binary(image_data)
+#             # image_binary = Binary(image_data)
 #             # Creamos un objeto Binary de MongoDB utilizando los datos de la imagen en formato de bytes. MongoDB puede almacenar datos binarios como objetos Binary. Este paso es necesario para poder almacenar la imagen en MongoDB.
 #             # Los bytes son la unidad básica de almacenamiento y transferencia de datos en sistemas informáticos.
             
-#             usuarios.update_one({ "Nombre":user }, { "$push": { "fotos": image_binary } })
+#             # usuarios.update_one({ "Nombre":user }, { "$push": { "fotos": image_binary } })
 #             contador+=1 
+            
+
         
 #         # Mostrar el fotograma 
 #         cv2.imshow("Captura del rostro", frame)
         
 
 #         # Esperar la pulsación de la tecla 'q' para salir
-#         if cv2.waitKey(1) == ord('q') or contador >=20:
+#         if cv2.waitKey(1) == ord('q') or contador > 100:
+#             print(f'Proceso finalizado, se almacenó {contador -1} fotos')
 #             break
 
 #     # Liberar la cámara y cerrar la ventana
 #     camera.release()
 #     cv2.destroyAllWindows()
-#     print(f'el usuario {user} se registró correctamente')
+#     # print(f'el usuario {user} se registró correctamente')
     
 # else:
-#     print('ya existe usuario con ese código')
+#     print('ya existe usuario con ese nombre')
     
 
 
@@ -102,7 +124,7 @@
 # import imutils
 
 # # Conectarse a la base de datos MongoDB Atlas
-# client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+# client = MongoClient("mongodb://localhost:27017")
 
 # # Seleccionar la base de datos y la colección
 # db = client["vision_artificial"]
@@ -139,7 +161,7 @@
 #             # Recortar el rostro
 #             rostro = frameNormal[y:y+h, x:x+w]
 #             # Redimensionar el rostro
-#             rostro = cv2.resize(rostro, (150, 150))
+#             rostro = cv2.resize(rostro, (200, 200))
 #             # Guardar la imagen en MongoDB
 #             ret, buffer = cv2.imencode('.jpg', rostro)
 #             image_data = buffer.tobytes()
@@ -186,7 +208,7 @@ from pymongo import MongoClient
 import imutils
 
 # Conectarse a la base de datos MongoDB Atlas
-client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient("mongodb+srv://Andrew:BEyKKt0ai4ArRqBQ@cluster0.qj0gkdd.mongodb.net/")
 
 # Seleccionar la base de datos y la colección
 db = client["vision_artificial"]
