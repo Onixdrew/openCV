@@ -70,6 +70,8 @@ while True:
         
         if result[1] < 80:
             
+            # /////////////////// Mejorar esta linea, aqui se presenta el error
+            
             # cv2.putText(frame,'{}'.format(listaPersonas[result[0]]), (x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
             cv2.rectangle(frame,(x,y),(x+w, y+h),(0,255,0),2)
             
