@@ -9,7 +9,7 @@ import os
                                     #  módulo en OpenCV que proporciona
                                     # rutas  predefinidas a los 
                                     # clasificadores en cascada Haar  +  archivo XML que contiene la información del clasificador en cascada para la detección de rostros frontales
-faceClassifier = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_frontalface_alt.xml')
+faceClassifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt.xml")
 
 
 # Cargar el modelo(clase) de reconocimiento facial LBPH de openCV
@@ -26,21 +26,21 @@ recognizer.read('modelo_vision_artificial.xml')
 # db = client["vision_artificial"]
 # usuarios = db["usuarios"]
 
-dataPath= r'C:\Users\Andrew\Documents\OpenCV\data'
+dataPath= r'c:\Users\SENA_Aprendiz\Documents\Onixdrew\OpenCV\data'
 listaPersonas= os.listdir(dataPath)
 print('lista de usuarios: ', listaPersonas)
 
 
-camara = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+camara = cv2.VideoCapture(0, cv2.CAP_ANY)
 
 while True:
     # Leer un fotograma del video
     ret, frame = camara.read()
     
-    if ret == False:
+    if not ret:
         print("No se pudo capturar el fotograma")
         break
-    
+        
     # Voltear horizontalmente la imagen
     frame= frameNormal = cv2.flip(frame, 1)
     
@@ -60,6 +60,7 @@ while True:
         rostro= cv2.resize(rostro,(150,150), interpolation= cv2.INTER_CUBIC)
         result=recognizer.predict(rostro)
     
+        print(result[0])
         
         cv2.putText(frame, '{}'.format(result), (x, y-5),1,1.3,(255,255,0),1, cv2.LINE_AA )
         
@@ -67,16 +68,15 @@ while True:
         #  se comprueba la confianza de la prediccion para asignar el nombre de la persona
         # result[1] es la confianza de prediccion, ya que predict devuelve dos variables(id, conf)
         
-        if result[1] < 75:
+        if result[1] < 80:
             
-            cv2.putText(frame,'{}'.format(listaPersonas[result[0]]), (x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
+            # cv2.putText(frame,'{}'.format(listaPersonas[result[0]]), (x,y-25),2,1.1,(0,255,0),1,cv2.LINE_AA)
             cv2.rectangle(frame,(x,y),(x+w, y+h),(0,255,0),2)
             
         else:
             cv2.putText(frame,'Desconocido',(x,y-20), 2, 0.8, (0,0,255),1 , cv2.LINE_AA)
             cv2.rectangle(frame,(x,y),(x+w, y+h),(0,0,255),2)
 
-        
         # Realizar el reconocimiento facial en la región del rostro
                                         #  Esto extrae la región de la imagen que contiene el rostro detectado.
         # id_, conf = recognizer.predict(gray[y:y+h, x:x+w])
