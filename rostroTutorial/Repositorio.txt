@@ -1,0 +1,3 @@
+link de openCV oficial(clasificadores para deteccion de objetos): https://github.com/opencv/opencv/tree/4.x/data/haarcascades
+
+Link del repositorio tutorial: https://github.com/abi94e/the-eyes-of-ia.git 
