@@ -123,8 +123,8 @@ import cv2
 import numpy as np
 import os
 
-
-dataPath= r'C:\Users\Andrew\Documents\Proyecto_Vision_Artificial\OpenCV\data'
+dataPath = r'C:\Users\SENA_Aprendiz\Documents\Onixdrew\openCV\data'
+# dataPath= r'C:\Users\Andrew\Documents\Proyecto_Vision_Artificial\OpenCV\data'
 listaPersonas= os.listdir(dataPath)
 print('lista de Usuarios: ', listaPersonas)
 

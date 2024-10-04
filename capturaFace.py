@@ -211,7 +211,8 @@ import os
 
 NombreUser = input('Ingresa tu nombre: ')
 
-dataPath = r'C:\Users\Andrew\Documents\Proyecto_Vision_Artificial\OpenCV\data'
+dataPath = r'C:\Users\SENA_Aprendiz\Documents\Onixdrew\openCV\data'
+# dataPath = r'C:\Users\Andrew\Documents\Proyecto_Vision_Artificial\OpenCV\data'
 dirUser = dataPath + '/' + NombreUser
 
 if not os.path.exists(dirUser):

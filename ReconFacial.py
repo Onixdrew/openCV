@@ -228,8 +228,8 @@
 import cv2
 import mediapipe as mp
 import os
-
-dataPath = r'C:\Users\Andrew\Documents\Proyecto_Vision_Artificial\OpenCV\data'
+dataPath = r'C:\Users\SENA_Aprendiz\Documents\Onixdrew\openCV\data'
+# dataPath = r'C:\Users\Andrew\Documents\Proyecto_Vision_Artificial\OpenCV\data'
 listaPersonas = os.listdir(dataPath)
 print('Lista de Usuarios: ', listaPersonas)
 
@@ -302,7 +302,7 @@ with detector.FaceDetection(min_detection_confidence=0.75) as rostros:
                         cv2.putText(frame, '{}'.format(prediccion), (xi, yi - 5), 1, 1.3, (255, 255, 0), 1, cv2.LINE_AA)
 
                         # Mostrar los resultados en pantalla
-                        if prediccion[1] < 77:
+                        if prediccion[1] < 70:
                             cv2.putText(frame, "{}".format(listaPersonas[prediccion[0]]), (xi, yi - 25),
                                         cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2, cv2.LINE_AA)
                             dibujo.draw_detection(frame, rostro)
